@@ -9,6 +9,10 @@ project/plugins/lib_managed/
 project/plugins/src_managed/
 /.idea/
 /.idea_modules/
+scalding-args/.classpath
+scalding-commons/.classpath
+scalding-core/.classpath
+scalding-date/.classpath
 *.iml
 tutorial/data/cofollows.tsv
 tutorial/data/cosineSim.tsv
