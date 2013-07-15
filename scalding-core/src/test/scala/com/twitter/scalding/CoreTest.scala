@@ -18,9 +18,10 @@ package com.twitter.scalding
 import cascading.tuple.Fields
 import cascading.tuple.TupleEntry
 import java.util.concurrent.TimeUnit
-
 import org.specs._
 import java.lang.{Integer => JInt}
+import com.twitter.scalding.Args
+import com.twitter.scalding.IterableSource
 
 class NumberJoinerJob(args : Args) extends Job(args) {
   val in0 = TypedTsv[(Int,Int)]("input0").read.rename((0,1) -> ('x0, 'y0))
@@ -1539,4 +1540,31 @@ class Function2Test extends Specification {
       .run
       .finish
   }
+}
+
+
+class VerifyTypesJob(args: Args) extends Job(args) {
+  Tsv("input", new Fields("age", "weight"))
+    .verifyTypes[Int]('weight)
+    .verifyTypes[(Int, Int)]('age -> 'weight)
+    .write(Tsv("output"))
+}
+
+class VerifyTypesJobTest extends Specification {
+  
+  "verifytypes" should { "a" in {
+	    val input = List((3, "aaa"),(23,154),(15,123),(53,143),(7,85),(19,195),
+	      (42,187),(35,165),(68,121),(13,103),(17,173),(2,13),(2,""))
+	
+	      
+	    val a = { JobTest(new com.twitter.scalding.VerifyTypesJob(_))
+	      .source(Tsv("input", new Fields("age", "weight")), input)
+	      .sink[(Int, Int)](Tsv("output")) { outBuf =>
+	        true
+	      }
+	      .run.finish }
+	      
+	    a must throwA[Throwable] 
+	  } 
+  } 
 }
