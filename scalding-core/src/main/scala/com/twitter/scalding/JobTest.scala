@@ -173,6 +173,8 @@ class JobTest(cons: (Args) => Job) {
         // Set the polling to a lower value to speed up tests:
         conf.set("jobclient.completion.poll.interval", "100")
         conf.set("cascading.flow.job.pollinginterval", "5")
+        conf.set("mapreduce.framework.name", "yarn")
+        conf.set("mapred.job.tracker", "local")
         // Work around for local hadoop race
         conf.set("mapred.local.dir", "/tmp/hadoop/%s/mapred/local".format(java.util.UUID.randomUUID))
         HadoopTest(conf, sourceMap)
@@ -190,6 +192,7 @@ class JobTest(cons: (Args) => Job) {
   private final def runJob(job: Job, runNext: Boolean): Unit = {
     // Disable automatic cascading update
     System.setProperty("cascading.update.skip", "true")
+    System.setProperty("mapreduce.framework.name", "yarn")
 
     // create cascading 3.0 planner trace files during tests
     if (System.getenv.asScala.getOrElse("SCALDING_CASCADING3_DEBUG", "0") == "1") {

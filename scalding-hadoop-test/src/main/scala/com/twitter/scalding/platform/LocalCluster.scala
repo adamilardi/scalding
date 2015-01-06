@@ -33,7 +33,7 @@ import java.io.{
 import java.nio.channels.FileLock
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.filecache.DistributedCache
+import org.apache.hadoop.mapreduce.filecache.DistributedCache
 import org.apache.hadoop.fs.{ FileSystem, FileUtil, Path }
 import org.apache.hadoop.hdfs.MiniDFSCluster
 import org.apache.hadoop.mapred.{ JobConf, MiniMRCluster }
@@ -109,6 +109,7 @@ class LocalCluster(mutex: Boolean = true) {
     mrJobConf.setMapSpeculativeExecution(false)
     mrJobConf.setReduceSpeculativeExecution(false)
     mrJobConf.set("mapreduce.user.classpath.first", "true")
+    mrJobConf.set("mapreduce.framework.name", "yarn")
 
     LOG.debug("Creating directory to store jars on classpath: " + LocalCluster.HADOOP_CLASSPATH_DIR)
     fileSystem.mkdirs(LocalCluster.HADOOP_CLASSPATH_DIR)
